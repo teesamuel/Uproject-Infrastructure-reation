@@ -18,18 +18,37 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
           
-  create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-              --region us-east-1
+#   create_infrastructure: 
+#     docker:
+#       - image: amazon/aws-cli
+#     steps:
+#       - checkout
+#       - run:
+#           name: Create Cloudformation Stack
+#           command: |
+#             aws cloudformation deploy \
+#               --template-file template.yml \
+#               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+#               --region us-east-1
+   # Exercise: Config and Deployment
+    configure_infrastructure: 
+      docker:
+        - image: 
+      steps:
+        - checkout
+        - add_ssh_keys:
+                # You can get this ID in the section where you registered the SSH Key
+                fingerprints: ["f2:08:a8:8f:66:c3:95:58:e1:f2:2a:36:59:d1:79:12"] 
+        - run:
+            name: Install Ansible
+            command: |
+              # Install Ansible
+              apk add --update ansible 
+        - run:
+            name: Run Playbook and Configure server
+            command: |
+              # Your command
+              ansible-playbook -i inventory.txt main4.yml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
